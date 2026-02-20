@@ -1,15 +1,18 @@
-<decoders>
-  <decoder name="infostealer-exec">
-    <prematch>"process":</prematch>
-    <json_field>process</json_field>
-  </decoder>
+<!-- Decode execution log -->
+<decoder name="infostealer-exec">
+  <prematch>infostealer_sim.py</prematch>
+</decoder>
 
-  <decoder name="browser-token">
-    <prematch>ya29</prematch>
-  </decoder>
+<!-- Decode OAuth token pattern -->
+<decoder name="browser-token">
+  <prematch>ya29\.</prematch>
+</decoder>
 
-  <decoder name="c2-exfil">
-    <prematch>"destination_port":</prematch>
-    <json_field>destination_port</json_field>
-  </decoder>
-</decoders>
+<!-- Decode JSON network logs -->
+<decoder name="c2-exfil">
+  <prematch>"destination_port":</prematch>
+  <json>
+    <field name="destination_port">destination_port</field>
+    <field name="destination_host">destination_host</field>
+  </json>
+</decoder>
