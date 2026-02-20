@@ -1,39 +1,59 @@
-<group name="scenario83,infostealer">
+<group name="scenario83,infostealer,">
 
+  <!-- 1. Execution -->
   <rule id="83001" level="8">
-    <match>infostealer_sim.py</match>
+    <decoded_as>infostealer-exec</decoded_as>
     <description>Infostealer Script Executed</description>
-    <mitre>T1059</mitre>
+    <mitre>
+      <id>T1059</id>
+    </mitre>
   </rule>
 
+  <!-- 2. Browser Cookie Theft -->
   <rule id="83002" level="10">
-    <match>SESSIONID</match>
+    <match>SESSIONID=</match>
     <description>Browser Session Cookie Accessed</description>
-    <mitre>T1555.003</mitre>
+    <mitre>
+      <id>T1555.003</id>
+    </mitre>
   </rule>
 
+  <!-- 3. OAuth Token Theft -->
   <rule id="83003" level="12">
-    <match>ya29</match>
+    <decoded_as>browser-token</decoded_as>
     <description>OAuth Token Theft Detected</description>
-    <mitre>T1539</mitre>
+    <mitre>
+      <id>T1539</id>
+    </mitre>
   </rule>
 
+  <!-- 4. Exfiltration to Non-Standard Port -->
   <rule id="83004" level="11">
-    <match>9137</match>
-    <description>Exfiltration to Non-Standard Port</description>
-    <mitre>T1041</mitre>
+    <decoded_as>c2-exfil</decoded_as>
+    <field name="destination_port">9137</field>
+    <description>Exfiltration to Non-Standard Port 9137</description>
+    <mitre>
+      <id>T1041</id>
+    </mitre>
   </rule>
 
+  <!-- 5. Communication to Known Fake C2 -->
   <rule id="83005" level="13">
-    <match>fake-c2</match>
-    <description>Known Fake C2 Host Communication</description>
-    <mitre>T1041</mitre>
+    <decoded_as>c2-exfil</decoded_as>
+    <field name="destination_host">fake-c2</field>
+    <description>Communication to Known Fake C2 Host</description>
+    <mitre>
+      <id>T1041</id>
+    </mitre>
   </rule>
 
-  <rule id="83099" level="15">
-  <if_matched_sid>83004</if_matched_sid>
-  <description>PHANTOMGRID{SCENARIO_83_COMPLETE}</description>
-</rule>
-
+  <!-- 6. Attack Chain Correlation -->
+  <rule id="83099"
+        level="15"
+        frequency="2"
+        timeframe="300">
+    <if_matched_sid>83004,83005</if_matched_sid>
+    <description>PHANTOMGRID{SCENARIO_83_COMPLETE}</description>
+  </rule>
 
 </group>
